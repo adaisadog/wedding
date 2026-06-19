@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>婚禮邀請</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --slate:#1C2A39;
+    --slate-deep:#16222F;
+    --pearl:#F8FAFC;
+    --dove:#E2E8F0;
+    --silver:#CFD2D6;
+    --silver-line:rgba(207,210,214,.55);
+    --silver-soft:rgba(207,210,214,.30);
+    --forest:#1E4620;
+    --forest-hover:#163417;
+    --serif:'Playfair Display','Noto Serif TC', Georgia, serif;
+    --serif-tc:'Noto Serif TC','Playfair Display', serif;
+    --sans:'Noto Sans TC', system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:74px}
+  body{font-family:var(--sans);color:var(--slate);background:var(--pearl);line-height:1.85;-webkit-font-smoothing:antialiased}
+  img{display:block;max-width:100%;height:auto}
+  h1,h2,h3{font-family:var(--serif-tc);font-weight:500;letter-spacing:.08em}
+
+  /* ---------- Art Deco 裝飾元件 ---------- */
+  .eyebrow{
+    font-family:var(--sans);font-size:.74rem;font-weight:500;letter-spacing:.5em;
+    display:inline-block;padding-left:.5em;
+  }
+  .rule{display:flex;align-items:center;justify-content:center;gap:13px;margin:0 auto}
+  .rule .line{height:1px;width:60px;background:linear-gradient(90deg,transparent,var(--silver))}
+  .rule .line.r{background:linear-gradient(90deg,var(--silver),transparent)}
+  .rule .gem{width:8px;height:8px;background:transparent;border:1px solid var(--silver);transform:rotate(45deg)}
+  .rule .gem.fill{background:var(--silver)}
+  .rule .gem.big{width:13px;height:13px;position:relative}
+  .rule .gem.big::after{content:'';position:absolute;inset:2px;background:var(--silver)}
+
+  section{padding:clamp(76px,9vw,132px) clamp(20px,6vw,80px);position:relative}
+
+  /* ---------- 導覽列 ---------- */
+  nav{
+    position:fixed;top:0;left:0;right:0;z-index:50;height:74px;
+    display:flex;align-items:center;justify-content:center;gap:clamp(14px,3vw,40px);
+    background:rgba(28,42,57,.93);backdrop-filter:blur(9px);
+    border-bottom:1px solid var(--silver-soft);
+  }
+  nav::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--silver-soft);opacity:.4}
+  nav a{
+    color:var(--dove);text-decoration:none;font-size:.78rem;letter-spacing:.28em;
+    padding:6px 2px;position:relative;transition:color .3s;white-space:nowrap;
+  }
+  nav a::after{content:'';position:absolute;left:50%;bottom:-2px;width:0;height:1px;background:var(--silver);transition:width .3s,left .3s}
+  nav a:hover,nav a:focus-visible{color:var(--pearl);outline:none}
+  nav a:hover::after,nav a:focus-visible::after{width:100%;left:0}
+  .nav-monogram{font-family:var(--serif);color:var(--silver);font-size:1.05rem;letter-spacing:.3em;padding:0 8px;position:relative}
+  .nav-monogram::before,.nav-monogram::after{content:'◆';font-size:.5rem;color:var(--silver);opacity:.7;vertical-align:middle;margin:0 5px}
+
+  /* ---------- 1. 歡迎首頁 ---------- */
+  #welcome{
+    background:var(--slate);color:var(--pearl);min-height:100vh;
+    display:flex;align-items:center;justify-content:center;text-align:center;
+    padding-top:74px;overflow:hidden;position:relative;
+  }
+  #welcome::before{
+    content:'';position:absolute;inset:0;opacity:.05;pointer-events:none;
+    background-image:
+      repeating-linear-gradient(45deg,var(--silver) 0 1px,transparent 1px 38px),
+      repeating-linear-gradient(-45deg,var(--silver) 0 1px,transparent 1px 38px);
+  }
+  .hero-frame{
+    position:relative;max-width:880px;width:100%;z-index:1;
+    padding:clamp(56px,8vw,96px) clamp(28px,7vw,80px);
+    border:1px solid var(--silver-line);
+  }
+  .hero-frame::before,.hero-frame::after{
+    content:'';position:absolute;width:54px;height:54px;border:1px solid var(--silver);
+  }
+  .hero-frame::before{top:-9px;left:-9px;border-right:none;border-bottom:none}
+  .hero-frame::after{bottom:-9px;right:-9px;border-left:none;border-top:none}
+  .hero-inner{position:relative;padding:clamp(20px,3vw,34px)}
+  .hero-inner::before,.hero-inner::after{
+    content:'';position:absolute;width:40px;height:40px;border:1px solid var(--silver-line);
+  }
+  .hero-inner::before{top:0;right:0;border-left:none;border-bottom:none}
+  .hero-inner::after{bottom:0;left:0;border-right:none;border-top:none}
+  .hero-cnr{position:absolute;width:40px;height:40px;border:1px solid var(--silver-line);z-index:1}
+  .hero-cnr.tl{top:0;left:0;border-right:none;border-bottom:none}
+  .hero-cnr.br{bottom:0;right:0;border-left:none;border-top:none}
+  .hero-diamond{margin:0 auto 34px;width:44px;color:var(--silver)}
+  .hero-diamond svg{width:100%;height:auto;display:block}
+  .hero-subline{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:34px}
+  .hero-subline .l{height:1px;width:clamp(40px,9vw,90px);background:var(--silver-line)}
+  #welcome .subtitle{
+    font-family:var(--sans);font-size:clamp(.72rem,1.6vw,.86rem);
+    color:var(--silver);font-weight:400;letter-spacing:.36em;white-space:nowrap;overflow-wrap:break-word;
+  }
+  #welcome h1{
+    font-family:var(--serif);
+    font-size:clamp(2.4rem,8vw,5.2rem);line-height:1.1;font-weight:500;
+    color:var(--pearl);margin:0 0 30px;min-height:1.1em;overflow-wrap:break-word;
+    letter-spacing:clamp(.06em,1.4vw,.22em);text-transform:uppercase;
+  }
+  #welcome .amp{font-family:var(--serif);font-weight:400;color:var(--silver);padding:0 .12em}
+  .hero-flourish{display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:42px}
+  .hero-flourish .d{width:8px;height:8px;background:var(--silver);transform:rotate(45deg)}
+  .hero-flourish .d.sm{width:4px;height:4px;background:var(--silver-line)}
+  .hero-flourish .seg{height:1px;width:clamp(40px,8vw,80px);background:var(--silver-line);margin:0 6px}
+  .hero-datebox{display:inline-block;border:1px solid var(--silver-line);position:relative;padding:18px clamp(34px,6vw,60px)}
+  .hero-datebox::before{content:'';position:absolute;inset:4px;border:1px solid var(--silver-soft);pointer-events:none}
+  .hero-date{
+    font-family:var(--serif);font-size:clamp(1.3rem,3.4vw,2rem);color:var(--pearl);
+    letter-spacing:.34em;padding-left:.34em;white-space:nowrap;position:relative;z-index:1;
+  }
+  .hero-scroll{
+    position:absolute;left:50%;bottom:clamp(20px,4vw,42px);transform:translateX(-50%);
+    text-align:center;z-index:1;color:var(--silver);text-decoration:none;transition:color .3s;
+  }
+  .hero-scroll:hover,.hero-scroll:focus-visible{color:var(--pearl);outline:none}
+  .hero-scroll .txt{font-family:var(--sans);font-size:.66rem;letter-spacing:.42em;padding-left:.42em;display:block;margin-bottom:10px}
+  .hero-scroll .arrow{display:inline-block;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+  @media(prefers-reduced-motion:reduce){.hero-scroll .arrow{animation:none}}
+
+  /* ---------- 1.5 全寬橫式首圖 ---------- */
+  #banner{padding:0;background:var(--pearl)}
+  .banner-wrap{position:relative;width:100%;aspect-ratio:21/9;min-height:340px;max-height:78vh;overflow:hidden;background:var(--slate)}
+  .banner-wrap img{width:100%;height:100%;object-fit:cover;object-position:center;display:block}
+  .banner-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(28,42,57,.18),rgba(28,42,57,0) 35%,rgba(28,42,57,.42));pointer-events:none;z-index:1}
+  .banner-frame{position:absolute;inset:clamp(16px,2.5vw,34px);border:1px solid var(--silver-line);z-index:2;pointer-events:none}
+  .banner-frame::before{content:'';position:absolute;inset:7px;border:1px solid rgba(248,250,252,.22)}
+  .banner-cnr{position:absolute;width:34px;height:34px;border:1px solid var(--silver);z-index:3}
+  .banner-cnr.tl{top:clamp(16px,2.5vw,34px);left:clamp(16px,2.5vw,34px);border-right:none;border-bottom:none}
+  .banner-cnr.tr{top:clamp(16px,2.5vw,34px);right:clamp(16px,2.5vw,34px);border-left:none;border-bottom:none}
+  .banner-cnr.bl{bottom:clamp(16px,2.5vw,34px);left:clamp(16px,2.5vw,34px);border-right:none;border-top:none}
+  .banner-cnr.br{bottom:clamp(16px,2.5vw,34px);right:clamp(16px,2.5vw,34px);border-left:none;border-top:none}
+  .banner-caption{position:absolute;left:0;right:0;bottom:clamp(40px,6vw,72px);text-align:center;z-index:4;padding:0 24px;color:var(--pearl)}
+  .banner-caption .ct{font-family:var(--serif);font-size:clamp(1.1rem,3vw,1.9rem);letter-spacing:.22em;text-shadow:0 2px 18px rgba(0,0,0,.45);overflow-wrap:break-word}
+  .banner-caption .cr{display:flex;align-items:center;justify-content:center;gap:11px;margin-top:14px}
+  .banner-caption .cr .line{height:1px;width:46px;background:rgba(248,250,252,.6)}
+  .banner-caption .cr .gem{width:7px;height:7px;border:1px solid var(--pearl);transform:rotate(45deg)}
+  .banner-ph{position:absolute;inset:0;z-index:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;color:var(--silver);background:var(--slate)}
+  .banner-ph .pd{width:16px;height:16px;border:1px solid var(--silver);transform:rotate(45deg)}
+  .banner-ph .pt{font-size:.86rem;letter-spacing:.08em;line-height:1.8;text-align:center;padding:0 24px}
+
+  /* ---------- 區塊標題 ---------- */
+  .sec-head{text-align:center;max-width:700px;margin:0 auto clamp(50px,6vw,76px)}
+  .sec-head .eyebrow{color:var(--forest);margin-bottom:18px}
+  .sec-head h2{font-size:clamp(2rem,4.6vw,3.1rem);color:var(--slate);margin-bottom:22px;overflow-wrap:break-word;letter-spacing:.14em}
+  .sec-head p{color:#52606D;max-width:560px;margin:0 auto;overflow-wrap:break-word;letter-spacing:.04em}
+  .sec-head .rule{margin-top:26px}
+
+  /* ---------- 2. 婚禮時間與地點 ---------- */
+  #details{background:var(--pearl)}
+  .details-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,5vw,72px);
+    max-width:1180px;margin:0 auto;align-items:stretch;
+  }
+  .details-info{
+    display:flex;flex-direction:column;justify-content:center;
+    border:1px solid var(--silver);padding:clamp(34px,4vw,60px);position:relative;background:var(--pearl);
+  }
+  .details-info::before{content:'';position:absolute;inset:9px;border:1px solid var(--dove);pointer-events:none}
+  .details-info::after{content:'';position:absolute;top:18px;left:18px;width:18px;height:18px;border-left:1px solid var(--forest);border-top:1px solid var(--forest)}
+  .detail-row{position:relative;z-index:1;padding:22px 0;border-bottom:1px solid var(--dove);min-height:84px}
+  .detail-row:last-child{border-bottom:none}
+  .detail-row .label{
+    font-size:.74rem;letter-spacing:.28em;color:var(--forest);
+    display:flex;align-items:center;gap:11px;margin-bottom:9px;
+  }
+  .detail-row .label .dia{width:6px;height:6px;background:var(--forest);transform:rotate(45deg);flex:none}
+  .detail-row .value{font-family:var(--serif-tc);font-size:clamp(1.15rem,2.2vw,1.5rem);color:var(--slate);overflow-wrap:break-word;letter-spacing:.05em}
+  .detail-row .sub{font-size:.95rem;color:#52606D;margin-top:5px;overflow-wrap:break-word}
+  .details-photo{position:relative;min-height:440px}
+  .details-photo .frame{position:absolute;inset:0;border:1px solid var(--silver);z-index:2;pointer-events:none}
+  .details-photo .frame::before{content:'';position:absolute;inset:10px;border:1px solid var(--silver-line)}
+  .details-photo .frame .cnr{position:absolute;width:22px;height:22px;border:1px solid var(--silver);z-index:3}
+  .details-photo .frame .cnr.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .details-photo .frame .cnr.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .details-photo img{width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;inset:0;padding:11px;background:var(--pearl)}
+  .details-photo .ph{
+    position:absolute;inset:11px;background:var(--dove);z-index:1;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+    color:#7a8794;text-align:center;padding:20px;
+  }
+  .details-photo .ph .ph-dia{width:14px;height:14px;border:1px solid #94a3b8;transform:rotate(45deg)}
+  .details-photo .ph .ph-txt{font-size:.82rem;letter-spacing:.06em;line-height:1.7}
+
+  /* 交通指南 */
+  .transport{max-width:1180px;margin:clamp(28px,4vw,48px) auto 0}
+  .transport-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,40px)}
+  .transport-card{
+    border:1px solid var(--silver);background:var(--pearl);position:relative;
+    padding:clamp(28px,3.5vw,44px);min-height:150px;
+  }
+  .transport-card::before{content:'';position:absolute;top:13px;left:13px;width:16px;height:16px;border-left:1px solid var(--forest);border-top:1px solid var(--forest)}
+  .transport-card::after{content:'';position:absolute;bottom:13px;right:13px;width:16px;height:16px;border-right:1px solid var(--forest);border-bottom:1px solid var(--forest)}
+  .transport-head{display:flex;align-items:center;gap:14px;margin-bottom:16px}
+  .transport-icon{width:30px;height:30px;color:var(--forest);flex:none}
+  .transport-icon svg{width:100%;height:100%}
+  .transport-head .ttl{font-family:var(--serif-tc);font-size:1.25rem;color:var(--slate);letter-spacing:.08em}
+  .transport-divider{width:38px;height:1px;background:var(--silver);margin-bottom:16px;position:relative}
+  .transport-divider::before{content:'';position:absolute;left:0;top:50%;width:5px;height:5px;background:var(--silver);transform:translateY(-50%) rotate(45deg)}
+  .transport-card p{color:#52606D;line-height:1.85;overflow-wrap:break-word;white-space:pre-line}
+
+  /* ---------- 3. Dress Code ---------- */
+  #dresscode{background:var(--dove);position:relative}
+  #dresscode::before,#dresscode::after{content:'';position:absolute;width:90px;height:90px;border:1px solid var(--silver);opacity:.5;pointer-events:none}
+  #dresscode::before{top:34px;left:34px;border-right:none;border-bottom:none}
+  #dresscode::after{bottom:34px;right:34px;border-left:none;border-top:none}
+  .dress-panels{
+    display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,40px);
+    max-width:1000px;margin:0 auto;align-items:stretch;
+  }
+  .dress-panel{
+    background:var(--pearl);text-align:center;position:relative;
+    border:1px solid var(--silver);padding:clamp(18px,2vw,24px);
+    display:flex;flex-direction:column;align-items:center;
+  }
+  .dress-panel::before,.dress-panel::after{content:'';position:absolute;width:38px;height:38px;border:1px solid var(--forest);z-index:3}
+  .dress-panel::before{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .dress-panel::after{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .dress-photo{position:relative;width:100%;aspect-ratio:4/5;margin-bottom:24px}
+  .dress-photo .pframe{position:absolute;inset:0;border:1px solid var(--silver);z-index:2;pointer-events:none}
+  .dress-photo .pframe::before,.dress-photo .pframe::after{content:'';position:absolute;width:24px;height:24px;border:1px solid var(--silver)}
+  .dress-photo .pframe::before{top:7px;left:7px;border-right:none;border-bottom:none}
+  .dress-photo .pframe::after{bottom:7px;right:7px;border-left:none;border-top:none}
+  .dress-photo img{width:100%;height:100%;object-fit:cover;object-position:top center;padding:9px;background:var(--pearl)}
+  .dress-body{padding:0 clamp(14px,2vw,26px) clamp(22px,2.5vw,32px)}
+  .dress-panel .who{font-size:.72rem;letter-spacing:.4em;color:var(--forest);margin-bottom:12px;display:block}
+  .dress-panel h3{font-size:clamp(1.4rem,2.6vw,1.9rem);color:var(--slate);margin-bottom:18px;overflow-wrap:break-word;letter-spacing:.1em}
+  .dress-divider{width:42px;height:1px;background:var(--silver);margin:0 auto 18px;position:relative}
+  .dress-divider::before{content:'';position:absolute;left:50%;top:50%;width:6px;height:6px;background:var(--silver);transform:translate(-50%,-50%) rotate(45deg)}
+  .dress-panel .guide{color:#52606D;line-height:1.85;overflow-wrap:break-word;min-height:3.6em}
+
+  /* ---------- 4. 回覆邀請 RSVP ---------- */
+  #rsvp{background:var(--slate);color:var(--pearl);position:relative;overflow:hidden}
+  #rsvp::before{
+    content:'';position:absolute;inset:0;opacity:.045;pointer-events:none;
+    background-image:repeating-linear-gradient(90deg,var(--silver) 0 1px,transparent 1px 48px);
+  }
+  #rsvp .sec-head{position:relative;z-index:1}
+  #rsvp .sec-head .eyebrow{color:var(--silver)}
+  #rsvp .sec-head h2{color:var(--pearl)}
+  #rsvp .sec-head p{color:var(--dove)}
+  #rsvp .sec-head .rule .line{background:linear-gradient(90deg,transparent,var(--silver-line))}
+  #rsvp .sec-head .rule .line.r{background:linear-gradient(90deg,var(--silver-line),transparent)}
+  .rsvp-card{
+    max-width:560px;margin:0 auto;position:relative;z-index:1;background:var(--slate-deep);
+    border:1px solid var(--silver-line);padding:clamp(44px,6vw,72px) clamp(30px,5vw,60px);text-align:center;
+  }
+  .rsvp-card::before,.rsvp-card::after{content:'';position:absolute;width:44px;height:44px;border:1px solid var(--silver)}
+  .rsvp-card::before{top:-9px;left:-9px;border-right:none;border-bottom:none}
+  .rsvp-card::after{bottom:-9px;right:-9px;border-left:none;border-top:none}
+  .rsvp-inner-cnr{position:absolute;width:20px;height:20px;border:1px solid var(--silver-line)}
+  .rsvp-inner-cnr.tr{top:14px;right:14px;border-left:none;border-bottom:none}
+  .rsvp-inner-cnr.bl{bottom:14px;left:14px;border-right:none;border-top:none}
+  .rsvp-deco{width:46px;margin:0 auto 26px;color:var(--silver)}
+  .rsvp-card .heading{font-family:var(--serif-tc);font-size:clamp(1.4rem,3vw,2rem);color:var(--pearl);margin-bottom:16px;letter-spacing:.1em}
+  .rsvp-card .body{color:var(--dove);line-height:1.9;margin-bottom:14px;overflow-wrap:break-word}
+  .rsvp-card .deadline{font-family:var(--serif);font-style:italic;color:var(--silver);font-size:1.05rem;margin-bottom:34px;letter-spacing:.04em;min-height:1px}
+  .rsvp-btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:12px;
+    background:var(--forest);color:var(--pearl);text-decoration:none;cursor:pointer;
+    font-family:var(--sans);font-size:.82rem;letter-spacing:.3em;
+    padding:18px 44px;border:1px solid var(--forest);position:relative;transition:background .3s,letter-spacing .3s;
+  }
+  .rsvp-btn::before,.rsvp-btn::after{content:'';position:absolute;width:9px;height:9px;border:1px solid rgba(248,250,252,.5);transition:border-color .3s}
+  .rsvp-btn::before{top:5px;left:5px;border-right:none;border-bottom:none}
+  .rsvp-btn::after{bottom:5px;right:5px;border-left:none;border-top:none}
+  .rsvp-btn:hover,.rsvp-btn:focus-visible{background:var(--forest-hover);letter-spacing:.34em;outline:none}
+  .rsvp-btn:focus-visible{box-shadow:0 0 0 2px var(--slate-deep),0 0 0 3px var(--silver)}
+  .rsvp-btn .gem{width:7px;height:7px;background:var(--silver);transform:rotate(45deg);flex:none}
+
+  /* ---------- 5. 五兄弟介紹 ---------- */
+  #brothers{background:var(--pearl)}
+  .brothers-grid{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(14px,1.6vw,24px);
+    max-width:1240px;margin:0 auto;
+  }
+  .bro-card{
+    border:1px solid var(--silver);padding:28px 18px;text-align:center;background:var(--pearl);
+    position:relative;display:flex;flex-direction:column;align-items:center;min-height:350px;transition:transform .35s,box-shadow .35s;
+  }
+  .bro-card::before{content:'';position:absolute;inset:7px;border:1px solid var(--dove);pointer-events:none}
+  .bro-card::after{content:'';position:absolute;top:13px;left:13px;width:14px;height:14px;border-left:1px solid var(--forest);border-top:1px solid var(--forest);opacity:0;transition:opacity .35s}
+  .bro-card:hover{transform:translateY(-6px);box-shadow:0 16px 36px rgba(28,42,57,.12)}
+  .bro-card:hover::after{opacity:1}
+  .bro-avatar{position:relative;width:98px;height:98px;margin:0 auto 20px;z-index:1}
+  .bro-avatar img{width:98px;height:98px;border-radius:50%;object-fit:cover}
+  .bro-avatar .ph{width:98px;height:98px;border-radius:50%;background:var(--dove)}
+  .bro-avatar::after{content:'';position:absolute;inset:-7px;border:1px solid var(--silver);border-radius:50%}
+  .bro-avatar::before{content:'';position:absolute;inset:-12px;border:1px dashed var(--silver-soft);border-radius:50%}
+  .bro-name{font-family:var(--serif-tc);font-size:1.3rem;color:var(--slate);margin-bottom:5px;z-index:1;overflow-wrap:break-word;letter-spacing:.08em}
+  .bro-role{font-size:.7rem;letter-spacing:.26em;color:var(--forest);margin-bottom:15px;z-index:1;overflow-wrap:break-word}
+  .bro-divider{width:36px;height:1px;background:var(--silver);margin:0 auto 15px;position:relative;z-index:1}
+  .bro-divider::before{content:'';position:absolute;left:50%;top:50%;width:5px;height:5px;background:var(--silver);transform:translate(-50%,-50%) rotate(45deg)}
+  .bro-bio{font-size:.9rem;color:#52606D;line-height:1.75;z-index:1;overflow-wrap:break-word}
+
+  /* ---------- 6. 精選相簿 ---------- */
+  #album{background:var(--slate);color:var(--pearl);position:relative}
+  #album::before,#album::after{content:'';position:absolute;width:90px;height:90px;border:1px solid var(--silver-line);pointer-events:none}
+  #album::before{top:34px;right:34px;border-left:none;border-bottom:none}
+  #album::after{bottom:34px;left:34px;border-right:none;border-top:none}
+  #album .sec-head .eyebrow{color:var(--silver)}
+  #album .sec-head h2{color:var(--pearl)}
+  #album .sec-head p{color:var(--dove)}
+  #album .sec-head .rule .line{background:linear-gradient(90deg,transparent,var(--silver-line))}
+  #album .sec-head .rule .line.r{background:linear-gradient(90deg,var(--silver-line),transparent)}
+  .masonry{column-count:3;column-gap:clamp(14px,2vw,22px);max-width:1180px;margin:0 auto}
+  .masonry figure{break-inside:avoid;margin-bottom:clamp(14px,2vw,22px);position:relative;padding:9px;border:1px solid var(--silver-line)}
+  .masonry figure::after{content:'';position:absolute;inset:0;border:1px solid transparent;transition:border-color .35s;pointer-events:none}
+  .masonry figure:hover::after{border-color:var(--silver)}
+  .masonry img{width:100%;box-shadow:0 6px 20px rgba(0,0,0,.35)}
+
+  /* ---------- 頁尾 ---------- */
+  footer{background:var(--slate-deep);color:var(--dove);text-align:center;padding:58px 20px;position:relative}
+  footer .monogram{font-family:var(--serif);font-size:1.7rem;letter-spacing:.36em;color:var(--silver);margin-bottom:16px}
+  footer .rule{margin:18px auto}
+  footer .rule .line{background:linear-gradient(90deg,transparent,var(--silver-line))}
+  footer .rule .line.r{background:linear-gradient(90deg,var(--silver-line),transparent)}
+  footer p{font-size:.84rem;letter-spacing:.18em}
+
+  /* ---------- 響應式 ---------- */
+  @media(max-width:980px){
+    .brothers-grid{grid-template-columns:repeat(2,1fr)}
+    .masonry{column-count:2}
+  }
+  @media(max-width:760px){
+    nav{gap:10px;overflow-x:auto;justify-content:flex-start;padding:0 14px}
+    .nav-monogram{display:none}
+    .details-grid{grid-template-columns:1fr}
+    .details-photo{min-height:340px}
+    .transport-grid{grid-template-columns:1fr}
+    .dress-panels{grid-template-columns:1fr}
+    #dresscode::before,#dresscode::after,#album::before,#album::after{display:none}
+  }
+  @media(max-width:520px){
+    .brothers-grid{grid-template-columns:1fr}
+    .masonry{column-count:1}
+  }
+  @media(prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *{transition:none!important}
+  }
+</style>
+</head>
+<body>
+
+<nav id="topnav" aria-label="主要導覽">
+  <a href="#welcome">首頁</a>
+  <a href="#details">時間地點</a>
+  <span class="nav-monogram" id="navMonogram"></span>
+  <a href="#dresscode">穿甚麼</a>
+  <a href="#rsvp">回覆邀請</a>
+  <a href="#brothers">兄弟介紹</a>
+  <a href="#album">照片搶先看</a>
+</nav>
+
+<!-- 1. 歡迎首頁 -->
+<section id="welcome">
+  <div class="hero-frame">
+    <span class="hero-cnr tl" aria-hidden="true"></span>
+    <span class="hero-cnr br" aria-hidden="true"></span>
+    <div class="hero-inner">
+      <div class="hero-diamond" aria-hidden="true">
+        <svg viewBox="0 0 44 56">
+          <g fill="none" stroke="#CFD2D6" stroke-width="1">
+            <path d="M22 4 L34 28 L22 52 L10 28 Z"/>
+            <path d="M22 14 L28 28 L22 42 L16 28 Z"/>
+          </g>
+          <path d="M22 22 L26 28 L22 34 L18 28 Z" fill="#CFD2D6"/>
+          <path d="M2 28 H10 M34 28 H42" stroke="#CFD2D6" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="hero-subline">
+        <span class="l" aria-hidden="true"></span>
+        <span class="subtitle" id="welcomeSubtitle"></span>
+        <span class="l" aria-hidden="true"></span>
+      </div>
+      <h1 id="welcomeTitle"></h1>
+      <div class="hero-flourish" aria-hidden="true">
+        <span class="d"></span><span class="d sm"></span>
+        <span class="seg"></span>
+        <span class="d sm"></span><span class="d"></span>
+      </div>
+      <div class="hero-datebox">
+        <span class="hero-date" id="welcomeDate"></span>
+      </div>
+    </div>
+  </div>
+  <a class="hero-scroll" href="#banner" aria-label="捲動至下方">
+    <span class="txt" id="welcomeScroll"></span>
+    <span class="arrow">
+      <svg width="18" height="12" viewBox="0 0 18 12" fill="none" stroke="currentColor" stroke-width="1.4">
+        <path d="M2 2 L9 9 L16 2"/>
+      </svg>
+    </span>
+  </a>
+</section>
+
+<!-- 1.5 全寬橫式首圖 -->
+<section id="banner">
+  <div class="banner-wrap">
+    <div class="banner-ph" id="bannerPh" aria-hidden="true">
+      <span class="pd"></span>
+      <span class="pt">橫式首圖待放置<br>請在 config 的 banner.imageUrl 貼上網址或檔名</span>
+    </div>
+    <img id="bannerImage" alt="婚紗照">
+    <div class="banner-frame" aria-hidden="true"></div>
+    <span class="banner-cnr tl" aria-hidden="true"></span>
+    <span class="banner-cnr tr" aria-hidden="true"></span>
+    <span class="banner-cnr bl" aria-hidden="true"></span>
+    <span class="banner-cnr br" aria-hidden="true"></span>
+    <div class="banner-caption">
+      <div class="ct" id="bannerCaption"></div>
+      <div class="cr" aria-hidden="true"><span class="line"></span><span class="gem"></span><span class="line"></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. 婚禮時間與地點 -->
+<section id="details">
+  <div class="sec-head">
+    <span class="eyebrow" id="detailsEyebrow"></span>
+    <h2 id="detailsTitle"></h2>
+    <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem big"></span><span class="line r"></span></div>
+  </div>
+  <div class="details-grid">
+    <div class="details-info" id="detailRows"></div>
+    <div class="details-photo">
+      <div class="frame" aria-hidden="true"><span class="cnr tl"></span><span class="cnr br"></span></div>
+      <div class="ph" id="detailsPh" aria-hidden="true">
+        <span class="ph-dia"></span>
+        <span class="ph-txt">照片待放置<br>請在 config 的 details.imageUrl 貼上網址</span>
+      </div>
+      <img id="detailsImage" alt="婚禮意境照">
+    </div>
+  </div>
+  <div class="transport" id="transport">
+    <div class="transport-grid">
+      <div class="transport-card">
+        <div class="transport-head">
+          <span class="transport-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="7" y="3" width="16" height="20" rx="3"/>
+              <path d="M7 11 H23"/>
+              <circle cx="11" cy="17" r="1.2" fill="currentColor" stroke="none"/>
+              <circle cx="19" cy="17" r="1.2" fill="currentColor" stroke="none"/>
+              <path d="M10 23 L7 27 M20 23 L23 27"/>
+            </svg>
+          </span>
+          <span class="ttl" id="metroTitle"></span>
+        </div>
+        <div class="transport-divider" aria-hidden="true"></div>
+        <p id="metroText"></p>
+      </div>
+      <div class="transport-card">
+        <div class="transport-head">
+          <span class="transport-icon" aria-hidden="true">
+            <svg viewBox="0 0 30 30" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 19 V13 L9 7 H21 L24 13 V19"/>
+              <path d="M4 19 H26"/>
+              <path d="M6 19 V22 H9 V19 M21 19 V22 H24 V19"/>
+              <circle cx="9" cy="15" r="1.2" fill="currentColor" stroke="none"/>
+              <circle cx="21" cy="15" r="1.2" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="ttl" id="parkingTitle"></span>
+        </div>
+        <div class="transport-divider" aria-hidden="true"></div>
+        <p id="parkingText"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. 著裝守則 -->
+<section id="dresscode">
+  <div class="sec-head">
+    <span class="eyebrow" id="dressEyebrow"></span>
+    <h2 id="dressTitle"></h2>
+    <p id="dressNote"></p>
+    <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem fill"></span><span class="line r"></span></div>
+  </div>
+  <div class="dress-panels">
+    <div class="dress-panel">
+      <div class="dress-photo">
+        <div class="pframe" aria-hidden="true"></div>
+        <img id="dressMenImage" alt="男士著裝">
+      </div>
+      <div class="dress-body">
+        <span class="who" id="dressMenWho"></span>
+        <h3 id="dressMenTitle"></h3>
+        <div class="dress-divider" aria-hidden="true"></div>
+        <p class="guide" id="dressMenGuide"></p>
+      </div>
+    </div>
+    <div class="dress-panel">
+      <div class="dress-photo">
+        <div class="pframe" aria-hidden="true"></div>
+        <img id="dressWomenImage" alt="女士著裝">
+      </div>
+      <div class="dress-body">
+        <span class="who" id="dressWomenWho"></span>
+        <h3 id="dressWomenTitle"></h3>
+        <div class="dress-divider" aria-hidden="true"></div>
+        <p class="guide" id="dressWomenGuide"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 4. 回覆邀請 -->
+<section id="rsvp">
+  <div class="sec-head">
+    <span class="eyebrow" id="rsvpEyebrow"></span>
+    <h2 id="rsvpTitle"></h2>
+    <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem"></span><span class="gem big"></span><span class="gem"></span><span class="line r"></span></div>
+  </div>
+  <div class="rsvp-card">
+    <span class="rsvp-inner-cnr tr" aria-hidden="true"></span>
+    <span class="rsvp-inner-cnr bl" aria-hidden="true"></span>
+    <div class="rsvp-deco" aria-hidden="true">
+      <svg viewBox="0 0 46 46" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M23 3 L26 20 L43 23 L26 26 L23 43 L20 26 L3 23 L20 20 Z"/>
+        <circle cx="23" cy="23" r="3.5"/>
+      </svg>
+    </div>
+    <h3 class="heading" id="rsvpHeading"></h3>
+    <p class="body" id="rsvpBody"></p>
+    <p class="deadline" id="rsvpDeadline"></p>
+    <a class="rsvp-btn" id="rsvpBtn" href="#" target="_blank" rel="noopener">
+      <span class="gem" aria-hidden="true"></span>
+      <span id="rsvpBtnText"></span>
+      <span class="gem" aria-hidden="true"></span>
+    </a>
+  </div>
+</section>
+
+<!-- 5. 五兄弟介紹 -->
+<section id="brothers">
+  <div class="sec-head">
+    <span class="eyebrow" id="brosEyebrow"></span>
+    <h2 id="brosTitle"></h2>
+    <p id="brosIntro"></p>
+    <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem"></span><span class="gem big"></span><span class="gem"></span><span class="line r"></span></div>
+  </div>
+  <div class="brothers-grid" id="brothersGrid"></div>
+</section>
+
+<!-- 6. 精選相簿 -->
+<section id="album">
+  <div class="sec-head">
+    <span class="eyebrow" id="albumEyebrow"></span>
+    <h2 id="albumTitle"></h2>
+    <p id="albumIntro"></p>
+    <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem big"></span><span class="line r"></span></div>
+  </div>
+  <div class="masonry" id="albumGrid"></div>
+</section>
+
+<footer>
+  <div class="monogram" id="footerMonogram"></div>
+  <div class="rule" aria-hidden="true"><span class="line"></span><span class="gem"></span><span class="line r"></span></div>
+  <p id="footerText"></p>
+</footer>
+
+<script>
+/* =========================================================================
+   內容設定 CONFIG — 你只要改這裡！所有文字與圖片網址都在這個清單中。
+   規則:只改每個冒號後面、引號 " " 中間的字,引號和逗號不要刪。
+   ========================================================================= */
+const config = {
+
+  // ── 通用 ──────────────────────────────
+  meta: {
+    monogram: "偉涵 ❖ 筱芸",                       // 導覽列與頁尾的小標誌
+    footerText: "感謝您的祝福 · 二〇二六"        // 頁尾文字
+  },
+
+  // ── 1. 歡迎首頁 ───────────────────────
+  welcome: {
+    subtitle: "MISSYUN: THE WEI TO FOREVER",      // 名字上方的英文小標(夾在兩條線中間)
+    title: "ADA & WILLIAM",                        // 兩位新人的名字(大寫英文最好看)
+    date: "2026 . 10 . 31",                        // 日期框內的日期
+    scroll: "SCROLL TO INVITE"                     // 最下方捲動引導文字
+  },
+
+  // ── 1.5 全寬橫式首圖 ──────────────────
+  banner: {
+    // ↓↓↓ 婚紗照上傳 GitHub(或圖床)後,把檔名或網址貼進下面引號中間 ↓↓↓
+    // 同資料夾範例: imageUrl: "cover.jpg"
+    // 圖床範例:     imageUrl: "https://i.imgur.com/abcd123.jpg"
+    imageUrl: "",                                  // 橫式首圖(留空會顯示「待放置」提示)
+    caption: "偉涵 與 筱芸"                          // 照片下方疊字(可填日期或一句話,留空則不顯示)
+  },
+
+  // ── 2. 婚禮時間與地點 ─────────────────
+  details: {
+    eyebrow: "婚禮資訊",
+    title: "時間與地點",
+    // ↓↓↓ 你的婚紗照(DSC09441)上傳到圖床後,把網址貼進下面的引號中間 ↓↓↓
+    // 範例: imageUrl: "https://i.imgur.com/abcd123.jpg",
+    imageUrl: "",                                  // 右側意境大圖(留空會顯示「照片待放置」提示)
+    // ↑↑↑ 貼好網址後存檔,重新整理就會出現照片 ↑↑↑
+    rows: [
+      { label: "日期", value: "2026/10/31", sub: "星期六" },
+      { label: "時間", value: "6:00PM 入場 6:30PM 開席", sub: "晚宴" },
+      { label: "地點", value: "W HOTEL 8F", sub: "台北市忠孝東路五段10號" },
+      { label: "備註", value: "正裝出席 · 敬備喜筵", sub: "恭候光臨" }
+    ],
+    // 交通指南(兩張卡片:大眾運輸 / 開車。換行請在文字中用 \n,整段留空會自動隱藏)
+    transport: {
+      metroTitle: "大眾運輸",
+      metroText: "捷運市政府站 1 號出口，步行約 3 分鐘即達。",
+      parkingTitle: "開車與停車",
+      parkingText: "飯店設有地下停車場，可折抵停車費，由「基隆路一段」駛入。"
+    }
+  },
+
+  // ── 3. 著裝守則 ───────────────────────
+  dressCode: {
+    eyebrow: "賓客指南",
+    title: "DRESS CODE",
+    note: "誠摯邀請您穿著以下風服裝出席，成為這美好時刻的一部分。",
+    men: {
+      who: "男士",
+      title: "西裝/Smart Casual",
+      imageUrl: "https://images.unsplash.com/photo-1593032465175-481ac7f401a0?auto=format&fit=crop&w=600&q=80", // 男生服裝照
+      guide: "西裝或是展現個人風格的時裝，跟抱哥一樣帥氣。"
+    },
+    women: {
+      who: "女士",
+      title: "晚宴禮服/個人風格時裝",
+      imageUrl: "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=600&q=80", // 女生服裝照
+      guide: "長短禮服或Smart Casual，跟老貓一樣美麗。"
+    }
+  },
+
+  // ── 4. 回覆邀請 RSVP(按鈕連到你的表單) ──
+  rsvp: {
+    eyebrow: "敬請回覆",
+    title: "回覆邀請",
+    heading: "期待與您相聚",
+    body: "為使我們能妥善安排座位與餐點,敬請於下方填寫您的出席意願。",
+    deadline: "",                                   // 截止日期(例如「請於 十月一日 前回覆」,留空不顯示)
+    buttonText: "前往填寫邀請",
+    // ⚠️ 下面要用「填寫用」連結,不是 .../edit 的編輯連結！正確格式通常是 .../viewform
+    buttonUrl: "https://docs.google.com/forms/d/e/1FAIpQLSfSuY0iPO4jrg3ookRpriy2GoOP-cYe-CS3Rh96YnQJXg5jFQ/viewform?usp=sharing&ouid=101945370381204040205"
+  },
+
+  // ── 5. 五兄弟介紹 ─────────────────────
+  brothers: {
+    eyebrow: "兄弟們",
+    title: "酷狗兄DAY",
+    intro: "五位陪伴走過歲月的摯友,在這重要的一天與我們同在。",
+    members: [
+      { name: "傑克 · JACK", role: "核心領袖", bio: "兄弟中最資深的精神支柱，擅長在迷霧中潛伏與臥底掌控大局。", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80" },
+      { name: "抱哥 · LOTSO", role: "熊界教父", bio: "見慣大風大浪的沉穩老熊，一通電話就能叫來兩百台黑頭車，用最粉嫩的外表做最狠的事。", avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80" },
+      { name: "拉許 · RUSH", role: "斜槓霸總", bio: "表面是上市公司的年輕霸總，私底下是精通高空潛入的超級特務。", avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=300&q=80" },
+      { name: "老天鵝 · GOOSE", role: "頂級駭客", bio: "五兄弟的智商天花板，一邊遠端黑進防火牆，一邊幫另外四個愛惹禍的兄弟擦屁股。", avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=300&q=80" },
+      { name: "老肥貓 · Lucifer", role: "躺平神槍手", bio: "頂著大屁股、過著退休生活的薪水小偷，但只要一摸到狙擊槍，就沒有他搞不定的危機。", avatar: "https://images.unsplash.com/photo-1488161628813-04466f872be2?auto=format&fit=crop&w=300&q=80" }
+    ]
+  },
+
+  // ── 6. 精選相簿(照片網址清單) ─────────
+  album: {
+    eyebrow: "婚紗照搶先看",
+    title: "精選相簿",
+    intro: "LETS GO",
+    images: [
+      "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1525258946800-98cfd641d0de?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1507504031003-b417219a0fde?auto=format&fit=crop&w=600&q=80",
+      "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=600&q=80"
+    ]
+  }
+};
+
+/* =========================================================================
+   以下為程式邏輯,一般情況不需要更動。
+   ========================================================================= */
+const $ = id => document.getElementById(id);
+const setText = (id, val, fallback="") => { const el=$(id); if(el) el.textContent = (val ?? "").toString().trim() || fallback; };
+function escapeHtml(s){ return (s??"").toString().replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function escapeAttr(s){ return escapeHtml(s); }
+function setImg(id, url){ const img=$(id); if(!img) return; if(url){ img.src=url; img.style.display=""; } else { img.removeAttribute("src"); img.style.display="none"; } }
+
+function render(){
+  // 通用
+  setText("navMonogram", config.meta.monogram, "❖");
+  setText("footerMonogram", config.meta.monogram, "❖");
+  setText("footerText", config.meta.footerText);
+  document.title = (config.welcome.title || "婚禮邀請");
+
+  // 1. 歡迎首頁
+  setText("welcomeSubtitle", config.welcome.subtitle);
+  const t = (config.welcome.title || "WELCOME").trim();
+  $("welcomeTitle").innerHTML = escapeHtml(t).replace(/\s*(與|及|and|&amp;)\s*/i, ' <span class="amp">&</span> ');
+  setText("welcomeDate", config.welcome.date);
+  setText("welcomeScroll", config.welcome.scroll);
+
+  // 1.5 全寬橫式首圖
+  const banner = config.banner || {};
+  setImg("bannerImage", banner.imageUrl);
+  const bannerPh = $("bannerPh");
+  if(bannerPh) bannerPh.style.display = banner.imageUrl ? "none" : "flex";
+  setText("bannerCaption", banner.caption);
+
+  // 2. 婚禮時間與地點
+  setText("detailsEyebrow", config.details.eyebrow);
+  setText("detailsTitle", config.details.title, "時間與地點");
+  setImg("detailsImage", config.details.imageUrl);
+  const detailsPh = $("detailsPh");
+  if(detailsPh) detailsPh.style.display = config.details.imageUrl ? "none" : "flex";
+  const rowsWrap = $("detailRows"); rowsWrap.innerHTML = "";
+  (config.details.rows || []).forEach(r => {
+    const div = document.createElement("div");
+    div.className = "detail-row";
+    div.innerHTML = `
+      <div class="label"><span class="dia"></span>${escapeHtml(r.label||"")}</div>
+      <div class="value">${escapeHtml(r.value||"—")}</div>
+      ${r.sub ? `<div class="sub">${escapeHtml(r.sub)}</div>`:""}`;
+    rowsWrap.appendChild(div);
+  });
+  // 交通指南
+  const tp = (config.details && config.details.transport) || {};
+  setText("metroTitle", tp.metroTitle, "大眾運輸");
+  setText("metroText", tp.metroText);
+  setText("parkingTitle", tp.parkingTitle, "開車與停車");
+  setText("parkingText", tp.parkingText);
+  const transportWrap = $("transport");
+  if(transportWrap){
+    const hasTransport = (tp.metroText && tp.metroText.trim()) || (tp.parkingText && tp.parkingText.trim());
+    transportWrap.style.display = hasTransport ? "block" : "none";
+  }
+
+  // 3. 著裝守則
+  setText("dressEyebrow", config.dressCode.eyebrow);
+  setText("dressTitle", config.dressCode.title, "著裝守則");
+  setText("dressNote", config.dressCode.note);
+  const men = config.dressCode.men || {}, women = config.dressCode.women || {};
+  setImg("dressMenImage", men.imageUrl);
+  setImg("dressWomenImage", women.imageUrl);
+  setText("dressMenWho", men.who, "紳士");
+  setText("dressMenTitle", men.title, "—");
+  setText("dressMenGuide", men.guide);
+  setText("dressWomenWho", women.who, "淑女");
+  setText("dressWomenTitle", women.title, "—");
+  setText("dressWomenGuide", women.guide);
+
+  // 4. 回覆邀請(連結按鈕)
+  const rsvp = config.rsvp || {};
+  setText("rsvpEyebrow", rsvp.eyebrow);
+  setText("rsvpTitle", rsvp.title, "回覆邀請");
+  setText("rsvpHeading", rsvp.heading);
+  setText("rsvpBody", rsvp.body);
+  setText("rsvpDeadline", rsvp.deadline);
+  setText("rsvpBtnText", rsvp.buttonText, "前往填寫");
+  const btn = $("rsvpBtn");
+  if(rsvp.buttonUrl){ btn.href = rsvp.buttonUrl; btn.style.display = ""; }
+  else { btn.removeAttribute("href"); }
+
+  // 5. 五兄弟介紹
+  setText("brosEyebrow", config.brothers.eyebrow);
+  setText("brosTitle", config.brothers.title, "兄弟們");
+  setText("brosIntro", config.brothers.intro);
+  const grid = $("brothersGrid"); grid.innerHTML = "";
+  (config.brothers.members || []).forEach(m => {
+    const card = document.createElement("div");
+    card.className = "bro-card";
+    const avatar = m.avatar
+      ? `<img src="${escapeAttr(m.avatar)}" alt="${escapeAttr(m.name||'')}">`
+      : `<div class="ph"></div>`;
+    card.innerHTML = `
+      <div class="bro-avatar">${avatar}</div>
+      <div class="bro-name">${escapeHtml(m.name||"—")}</div>
+      <div class="bro-role">${escapeHtml(m.role||"")}</div>
+      <div class="bro-divider"></div>
+      <div class="bro-bio">${escapeHtml(m.bio||"")}</div>`;
+    grid.appendChild(card);
+  });
+
+  // 6. 精選相簿
+  setText("albumEyebrow", config.album.eyebrow);
+  setText("albumTitle", config.album.title, "精選相簿");
+  setText("albumIntro", config.album.intro);
+  const am = $("albumGrid"); am.innerHTML = "";
+  (config.album.images || []).forEach((url,i) => {
+    if(!url) return;
+    const fig = document.createElement("figure");
+    fig.innerHTML = `<img src="${escapeAttr(url)}" alt="相簿照片 ${i+1}" loading="lazy">`;
+    am.appendChild(fig);
+  });
+}
+
+render();
+
+/* 導覽列與首頁捲動引導的平滑滾動(含頂部高度補償) */
+document.querySelectorAll('nav a[href^="#"], .hero-scroll[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const target = document.querySelector(a.getAttribute('href'));
+    if(target){
+      e.preventDefault();
+      const top = target.getBoundingClientRect().top + window.pageYOffset - 74;
+      window.scrollTo({ top, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+    }
+  });
+});
+</script>
+</body>
+</html>
